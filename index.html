@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stocks Ui</title>
+    <style>
+        .stocks {
+            display: flex;
+            flex-direction: row;
+        }
+        .stock {
+            margin-right: 50px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+    </style>
+</head>
+<body>
+    <h1>Stock Prices</h1>
+    <div class="stocks">
+        <div class="stock SPX">
+            <h2>S&P 500 Index</h2>
+            <ul class="stock-prices"></ul>
+        </div>
+        <div class="stock CL1">
+            <h2>Crude Oil WTI (NYM $/bbl) Front Month</h2>
+            <ul class="stock-prices"></ul>
+        </div>
+        <div class="stock HSI">
+            <h2>Hang Seng Index</h2>
+            <ul class="stock-prices"></ul>
+        </div>
+    </div>
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+      var socket = io()
+
+      socket.on("stock_update", function(data) {
+        const stocks = data.priceUpdates
+
+        for(let i=0; i<stocks.length; i++) {
+            var stock = stocks[i]
+            var stockDiv = document.querySelector(`.stock.${stock.ticker}`)
+            var ul = stockDiv.children.item(1)
+
+            var li = document.createElement("li")
+            li.innerText = '$' + stock.price
+
+            ul.appendChild(li)
+        }
+      })
+    </script>
+</body>
+</html>
